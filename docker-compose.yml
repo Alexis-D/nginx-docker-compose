@@ -1,0 +1,41 @@
+version: '3'
+services:
+  foo:
+    build:
+      context: ./trivial-httpd-backend
+      args:
+        HTML: |-
+          <html>
+            <head>
+              <title>Hello from foo!</title>
+            </head>
+            <body>
+              <p>Hello from foo!</p>
+              <p><a href="/bar">Wanna see /bar?</a></p>
+            </body>
+          </html>
+
+  bar:
+    build:
+      context: ./trivial-httpd-backend
+      args:
+        HTML: |-
+          <html>
+            <head>
+              <title>Hello from bar!</title>
+            </head>
+            <body>
+              <p>Hello from bar!</p>
+              <p><a href="/foo">Wanna see /foo?</a></p>
+            </body>
+          </html>
+
+  nginx:
+    image: nginx:alpine-slim
+    ports:
+      - "8080:80"
+    volumes:
+      - type: bind
+        source: ./nginx.conf
+        target: /etc/nginx/nginx.conf
+        read_only: true
